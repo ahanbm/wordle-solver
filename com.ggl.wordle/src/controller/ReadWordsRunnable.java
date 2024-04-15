@@ -26,9 +26,7 @@ public class ReadWordsRunnable implements Runnable {
 		try {
 			FileHandler fileTxt = new FileHandler("./logging.txt");
 			LOGGER.addHandler(fileTxt);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException | SecurityException e) {
 			e.printStackTrace();
 		}
 
@@ -56,24 +54,6 @@ public class ReadWordsRunnable implements Runnable {
 		int minimum = model.getColumnCount();
 
 		List<String> wordlist = new ArrayList<>();
-
-		File directory = new File("resources/");
-
-		// Check if the directory exists
-		if (directory.exists() && directory.isDirectory()) {
-			// List the contents of the directory
-			File[] files = directory.listFiles();
-			if (files != null) {
-				System.out.println("Contents of ../:");
-				for (File file : files) {
-					System.out.println(file.getName());
-				}
-			} else {
-				System.out.println("Failed to list directory contents.");
-			}
-		} else {
-			System.out.println("Directory ../ does not exist or is not a directory.");
-		}
 
 		String text = "resources/usa.txt";
 		File f = new File(text);
