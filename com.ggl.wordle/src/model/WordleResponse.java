@@ -3,9 +3,9 @@ package com.ggl.wordle.model;
 import java.awt.Color;
 
 public class WordleResponse {
-	
+
 	private final char c;
-	
+
 	private final ColorResponse colorResponse;
 
 	public WordleResponse(char c, Color backgroundColor, Color foregroundColor) {
@@ -24,5 +24,5 @@ public class WordleResponse {
 	public Color getForegroundColor() {
 		return colorResponse.getForegroundColor();
 	}
-	
+
 }

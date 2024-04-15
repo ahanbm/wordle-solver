@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Statistics {
-	
+
 	private int currentStreak, longestStreak, totalGamesPlayed;
-	
+
 	private List<Integer> wordsGuessed;
-	
+
 	private String path, log;
-	
+
 	public Statistics() {
 		this.wordsGuessed = new ArrayList<>();
 		String fileSeparator = System.getProperty("file.separator");
@@ -25,7 +25,7 @@ public class Statistics {
 		this.log = fileSeparator + "statistics.log";
 		readStatistics();
 	}
-	
+
 	private void readStatistics() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path + log));
@@ -33,7 +33,7 @@ public class Statistics {
 			this.longestStreak = Integer.valueOf(br.readLine().trim());
 			this.totalGamesPlayed = Integer.valueOf(br.readLine().trim());
 			int totalWordsGuessed = Integer.valueOf(br.readLine().trim());
-			
+
 			for (int index = 0; index < totalWordsGuessed; index++) {
 				wordsGuessed.add(Integer.valueOf(br.readLine().trim()));
 			}
@@ -46,7 +46,7 @@ public class Statistics {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void writeStatistics() {
 		try {
 			File file = new File(path);
@@ -63,12 +63,12 @@ public class Statistics {
 			bw.write(System.lineSeparator());
 			bw.write(Integer.toString(wordsGuessed.size()));
 			bw.write(System.lineSeparator());
-			
+
 			for (Integer value : wordsGuessed) {
 				bw.write(Integer.toString(value));
 				bw.write(System.lineSeparator());
 			}
-			
+
 			bw.flush();
 			bw.close();
 		} catch (IOException e) {

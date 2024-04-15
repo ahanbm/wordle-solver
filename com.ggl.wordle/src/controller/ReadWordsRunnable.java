@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.File;
+import java.io.FileReader;
 
 import com.ggl.wordle.model.WordleModel;
 
 public class ReadWordsRunnable implements Runnable {
 
-	private final static Logger LOGGER =
-			Logger.getLogger(ReadWordsRunnable.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(ReadWordsRunnable.class.getName());
 
 	private final WordleModel model;
 
@@ -56,23 +57,43 @@ public class ReadWordsRunnable implements Runnable {
 
 		List<String> wordlist = new ArrayList<>();
 
-		String text = "usa.txt";
-		ClassLoader loader = this.getClass().getClassLoader();
-		InputStream stream = loader.getResourceAsStream(text);
+		File directory = new File("resources/");
 
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(stream));
-		String line = reader.readLine();
-		while (line != null) {
-			line = line.trim();
-			if (line.length() == minimum) {
-				wordlist.add(line);
+		// Check if the directory exists
+		if (directory.exists() && directory.isDirectory()) {
+			// List the contents of the directory
+			File[] files = directory.listFiles();
+			if (files != null) {
+				System.out.println("Contents of ../:");
+				for (File file : files) {
+					System.out.println(file.getName());
+				}
+			} else {
+				System.out.println("Failed to list directory contents.");
 			}
-			line = reader.readLine();
+		} else {
+			System.out.println("Directory ../ does not exist or is not a directory.");
 		}
-		reader.close();
+
+		String text = "resources/usa.txt";
+		File f = new File(text);
+
+		if (f.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+				String line = reader.readLine();
+				while (line != null) {
+					line = line.trim();
+					if (line.length() == minimum) {
+						wordlist.add(line);
+					}
+					line = reader.readLine();
+				}
+			}
+		} else {
+			throw new IOException("Resource not found: " + text);
+		}
 
 		return wordlist;
 	}
-	
+
 }
