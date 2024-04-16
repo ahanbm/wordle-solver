@@ -35,23 +35,30 @@ public class KeyboardButtonAction extends AbstractAction {
 					WordleResponse[] currentRow = model.getCurrentRow();
 					int greenCount = 0;
 					for (WordleResponse wordleResponse : currentRow) {
-						view.setColor(Character.toString(wordleResponse.getChar()),
+						view.setColor(Character.toString(
+										wordleResponse.getChar()),
 								wordleResponse.getBackgroundColor(),
 								wordleResponse.getForegroundColor());
-						if (wordleResponse.getBackgroundColor().equals(AppColors.GREEN)) {
+						if (wordleResponse.getBackgroundColor()
+								.equals(AppColors.GREEN)) {
 							greenCount++;
 						}
 					}
 
 					if (greenCount >= model.getColumnCount()) {
+						System.out.println("You Won!");
 						view.repaintWordleGridPanel();
 						model.getStatistics().incrementTotalGamesPlayed();
 						int currentRowNumber = model.getCurrentRowNumber();
-						model.getStatistics().addWordsGuessed(currentRowNumber);
-						int currentStreak = model.getStatistics().getCurrentStreak();
-						model.getStatistics().setCurrentStreak(++currentStreak);
+						model.getStatistics()
+								.addWordsGuessed(currentRowNumber);
+						int currentStreak = model.getStatistics()
+								.getCurrentStreak();
+						model.getStatistics()
+								.setCurrentStreak(++currentStreak);
 						new StatisticsDialog(view, model);
 					} else if (!moreRows) {
+						System.out.println("The word was " + model.cheat());
 						view.repaintWordleGridPanel();
 						model.getStatistics().incrementTotalGamesPlayed();
 						model.getStatistics().setCurrentStreak(0);
@@ -72,5 +79,4 @@ public class KeyboardButtonAction extends AbstractAction {
 		}
 
 	}
-
 }

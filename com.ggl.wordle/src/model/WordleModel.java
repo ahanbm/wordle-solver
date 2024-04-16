@@ -22,7 +22,7 @@ public class WordleModel {
 	private WordleResponse[][] wordleGrid;
 
 	public WordleModel() {
-		this.currentColumn = -1;
+		this.currentColumn = 0;
 		this.currentRow = 0;
 		this.columnCount = 5;
 		this.maximumRows = 6;
@@ -40,9 +40,19 @@ public class WordleModel {
 		new Thread(runnable).start();
 	}
 
+	public String cheat() {
+		StringBuilder s = new StringBuilder();
+
+		for (char c : currentWord) {
+			s.append(c);
+		}
+
+		return s.toString();
+	}
+
 	public void initialize() {
 		this.wordleGrid = initializeWordleGrid();
-		this.currentColumn = -1;
+		this.currentColumn = 0;
 		this.currentRow = 0;
 		generateCurrentWord();
 		this.guess = new char[columnCount];
@@ -84,18 +94,18 @@ public class WordleModel {
 	}
 
 	public void setCurrentColumn(char c) {
-		currentColumn++;
 		currentColumn = Math.min(currentColumn, (columnCount - 1));
 		guess[currentColumn] = c;
 		wordleGrid[currentRow][currentColumn] = new WordleResponse(c,
 				Color.WHITE, Color.BLACK);
+		currentColumn++;
 	}
 
 	public void backspace() {
-		wordleGrid[currentRow][currentColumn] = null;
-		guess[currentColumn] = ' ';
 		this.currentColumn--;
 		this.currentColumn = Math.max(currentColumn, 0);
+		wordleGrid[currentRow][currentColumn] = null;
+		guess[currentColumn] = ' ';
 	}
 
 	public WordleResponse[] getCurrentRow() {
@@ -106,21 +116,49 @@ public class WordleModel {
 		return currentRow - 1;
 	}
 
+	private int indexOfFirstMatch(char[] word, char letter, boolean[] matchedIndices) {
+		for (int i = 0; i < word.length; i++) {
+			if (word[i] == letter && !matchedIndices[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public boolean setCurrentRow() {
+		boolean[] matchedIndices = new boolean[currentWord.length];
+
 		for (int column = 0; column < guess.length; column++) {
 			Color backgroundColor = AppColors.GRAY;
 			Color foregroundColor = Color.WHITE;
+
 			if (guess[column] == currentWord[column]) {
 				backgroundColor = AppColors.GREEN;
-			} else if (contains(currentWord, guess, column)) {
-				backgroundColor = AppColors.YELLOW;
+				matchedIndices[column] = true;
 			}
 
 			wordleGrid[currentRow][column] = new WordleResponse(guess[column],
 					backgroundColor, foregroundColor);
 		}
 
-		currentColumn = -1;
+		for (int column = 0; column < guess.length; column++) {
+			Color backgroundColor = AppColors.GRAY;
+			Color foregroundColor = Color.WHITE;
+			if (guess[column] == currentWord[column]) {
+				continue;
+			}
+
+			int index = indexOfFirstMatch(currentWord, guess[column], matchedIndices);
+			if (index != -1) {
+				backgroundColor = AppColors.YELLOW;
+				matchedIndices[index] = true;
+			}
+
+			wordleGrid[currentRow][column] = new WordleResponse(guess[column],
+					backgroundColor, foregroundColor);
+		}
+
+		currentColumn = 0;
 		currentRow++;
 		guess = new char[columnCount];
 
