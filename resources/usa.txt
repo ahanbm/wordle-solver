@@ -2540,7 +2540,6 @@ area
 areas
 areaway
 areawide
-aren't
 arena
 arenas
 argent
@@ -7167,7 +7166,6 @@ cams
 camshaft
 camshafts
 can
-can't
 canada
 canadian
 canadians
@@ -11916,7 +11914,6 @@ coughers
 coughing
 coughs
 could
-couldn't
 coulomb
 council
 councilman
@@ -14220,7 +14217,6 @@ demolished
 demolishes
 demolishing
 demolition
-demolition's
 demon
 demoniac
 demonic
@@ -14275,7 +14271,6 @@ demythologize
 demythologizes
 den
 denationalization
-denationalization's
 denationalize
 denationalized
 denationalizes
@@ -15172,7 +15167,6 @@ diddler
 diddlers
 diddles
 diddling
-didn't
 die
 died
 diehard
@@ -16752,7 +16746,6 @@ doer
 doers
 does
 doeskin
-doesn't
 doff
 doffed
 doffing
@@ -16855,7 +16848,6 @@ domino
 dominoes
 dominus
 don
-don't
 donald
 donate
 donated
@@ -24401,7 +24393,6 @@ hacksaws
 had
 haddock
 hades
-hadn't
 hafnes
 hafnium
 hag
@@ -24935,7 +24926,6 @@ hausa
 havana
 have
 haven
-haven't
 havens
 haver
 havered
@@ -24990,9 +24980,6 @@ hazily
 haziness
 hazy
 he
-he'd
-he'll
-he's
 head
 headache
 headaches
@@ -26498,10 +26485,6 @@ hysteric
 hysterical
 hysterically
 i
-i'd
-i'll
-i'm
-i've
 iamb
 iambic
 ian
@@ -29086,7 +29069,6 @@ isle
 isles
 islet
 islets
-isn't
 isobar
 isobars
 isocline
@@ -29121,9 +29103,6 @@ istanbul
 isthmus
 isthmuses
 it
-it'd
-it'll
-it's
 italian
 italians
 italic
@@ -34709,7 +34688,6 @@ mustering
 musters
 mustily
 mustiness
-mustn't
 musts
 musty
 mutable
@@ -35798,7 +35776,6 @@ nymphomaniac
 nymphomaniacs
 nymphs
 o
-o'clock
 oaf
 oafish
 oafs
@@ -36745,7 +36722,6 @@ oubliette
 oubliettes
 ouch
 ought
-oughtn't
 ounce
 ounces
 our
@@ -47217,7 +47193,6 @@ shampoos
 shamrock
 shamrocks
 shams
-shan't
 shandy
 shane
 shanghai
@@ -47284,8 +47259,6 @@ shaw
 shawl
 shawls
 she
-she'd
-she'll
 sheaf
 sheafs
 shear
@@ -47541,7 +47514,6 @@ shoulder
 shouldered
 shouldering
 shoulders
-shouldn't
 shout
 shouted
 shouting
@@ -50252,7 +50224,6 @@ stereotyping
 sterile
 sterility
 sterilization
-sterilization's
 sterilize
 sterilized
 sterilizes
@@ -52900,7 +52871,6 @@ thanksgiver
 thanksgivers
 thanksgiving
 that
-that's
 thatch
 thatched
 thatches
@@ -52976,7 +52946,6 @@ therapist
 therapists
 therapy
 there
-there's
 thereabout
 thereabouts
 thereafter
@@ -53031,10 +53000,6 @@ thespians
 thessalonians
 theta
 they
-they'd
-they'll
-they're
-they've
 thiamin
 thick
 thicken
@@ -59798,7 +59763,6 @@ washington
 washout
 washtub
 washy
-wasn't
 wasp
 waspish
 waspishly
@@ -59938,10 +59902,6 @@ wayside
 wayward
 wayworn
 we
-we'd
-we'll
-we're
-we've
 weak
 weaken
 weakened
@@ -60109,7 +60069,6 @@ wends
 went
 wept
 were
-weren't
 wesley
 wesleyan
 wesson
@@ -60743,7 +60702,6 @@ wombats
 wombs
 women
 won
-won't
 wonder
 wondered
 wonderful
@@ -60912,7 +60870,6 @@ worthlessness
 worthwhile
 worthy
 would
-wouldn't
 wound
 wounded
 wounding
@@ -61209,10 +61166,6 @@ york
 yorkshire
 yosemite
 you
-you'd
-you'll
-you're
-you've
 young
 younger
 youngest

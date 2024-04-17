@@ -3,12 +3,14 @@ package com.ggl.wordle.model;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import com.ggl.wordle.controller.ReadWordsRunnable;
 
 public class WordleModel {
 
 	private char[] currentWord, guess;
+	private final Solver sol;
 
 	private final int columnCount, maximumRows;
 	private int currentColumn, currentRow;
@@ -29,6 +31,7 @@ public class WordleModel {
 		this.random = new Random();
 
 		createWordList();
+		sol = new Solver(columnCount);
 
 		this.wordleGrid = initializeWordleGrid();
 		this.guess = new char[columnCount];
@@ -125,34 +128,38 @@ public class WordleModel {
 		return -1;
 	}
 
-	public boolean setCurrentRow() {
+	public Color[] response(char[] guess) {
+		Color[] result = new Color[currentWord.length];
 		boolean[] matchedIndices = new boolean[currentWord.length];
 
-		for (int column = 0; column < guess.length; column++) {
-			Color backgroundColor = AppColors.GRAY;
-			Color foregroundColor = Color.WHITE;
+		Arrays.fill(result, Color.GRAY);
 
+		for (int column = 0; column < guess.length; column++) {
 			if (guess[column] == currentWord[column]) {
-				backgroundColor = AppColors.GREEN;
+				result[column] = AppColors.GREEN;
 				matchedIndices[column] = true;
 			}
-
-			wordleGrid[currentRow][column] = new WordleResponse(guess[column],
-					backgroundColor, foregroundColor);
 		}
 
 		for (int column = 0; column < guess.length; column++) {
-			Color backgroundColor = AppColors.GRAY;
-			Color foregroundColor = Color.WHITE;
-			if (guess[column] == currentWord[column]) {
-				continue;
-			}
-
 			int index = indexOfFirstMatch(currentWord, guess[column], matchedIndices);
-			if (index != -1) {
-				backgroundColor = AppColors.YELLOW;
+
+			if (index != -1 && result[column] != AppColors.GREEN) {
+				result[column] = AppColors.YELLOW;
 				matchedIndices[index] = true;
 			}
+		}
+
+		return result;
+	}
+
+	public boolean setCurrentRow() {
+		Color[] toSet = response(guess);
+		sol.log(guess, toSet);
+
+		for (int column = 0; column < guess.length; column++) {
+			Color backgroundColor = toSet[column];
+			Color foregroundColor = Color.WHITE;
 
 			wordleGrid[currentRow][column] = new WordleResponse(guess[column],
 					backgroundColor, foregroundColor);
@@ -160,19 +167,18 @@ public class WordleModel {
 
 		currentColumn = 0;
 		currentRow++;
-		guess = new char[columnCount];
 
-		return currentRow < maximumRows;
-	}
-
-	private boolean contains(char[] currentWord, char[] guess, int column) {
-		for (int index = 0; index < currentWord.length; index++) {
-			if (index != column && guess[column] == currentWord[index]) {
-				return true;
+		if (currentRow < maximumRows) {
+			for (String word : wordList) {
+				if (sol.works(word)) {
+					System.out.println(word);
+				}
 			}
 		}
 
-		return false;
+		guess = new char[columnCount];
+
+		return currentRow < maximumRows;
 	}
 
 	public WordleResponse[][] getWordleGrid() {
@@ -198,5 +204,4 @@ public class WordleModel {
 	public Statistics getStatistics() {
 		return statistics;
 	}
-
 }
