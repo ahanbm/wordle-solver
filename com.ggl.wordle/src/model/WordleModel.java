@@ -1,6 +1,8 @@
 package com.ggl.wordle.model;
 
 import java.awt.Color;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
@@ -97,7 +99,6 @@ public class WordleModel {
 	}
 
 	public void setCurrentColumn(char c) {
-		currentColumn = Math.min(currentColumn, (columnCount - 1));
 		guess[currentColumn] = c;
 		wordleGrid[currentRow][currentColumn] = new WordleResponse(c,
 				Color.WHITE, Color.BLACK);
@@ -128,11 +129,23 @@ public class WordleModel {
 		return -1;
 	}
 
+	public List<String> validWords() {
+		ArrayList<String> result = new ArrayList<>();
+
+		for (String word : wordList) {
+			if (sol.works(word)) {
+				result.add(word);
+			}
+		}
+
+		return result;
+	}
+
 	public Color[] response(char[] guess) {
 		Color[] result = new Color[currentWord.length];
 		boolean[] matchedIndices = new boolean[currentWord.length];
 
-		Arrays.fill(result, Color.GRAY);
+		Arrays.fill(result, AppColors.GRAY);
 
 		for (int column = 0; column < guess.length; column++) {
 			if (guess[column] == currentWord[column]) {
@@ -153,13 +166,18 @@ public class WordleModel {
 		return result;
 	}
 
+	public void resetSolver() {
+		sol.reset(columnCount);
+	}
+
 	public boolean setCurrentRow() {
 		Color[] toSet = response(guess);
 		sol.log(guess, toSet);
 
+		Color foregroundColor = Color.WHITE;
+
 		for (int column = 0; column < guess.length; column++) {
 			Color backgroundColor = toSet[column];
-			Color foregroundColor = Color.WHITE;
 
 			wordleGrid[currentRow][column] = new WordleResponse(guess[column],
 					backgroundColor, foregroundColor);
@@ -168,17 +186,15 @@ public class WordleModel {
 		currentColumn = 0;
 		currentRow++;
 
-		if (currentRow < maximumRows) {
-			for (String word : wordList) {
-				if (sol.works(word)) {
-					System.out.println(word);
-				}
-			}
-		}
-
 		guess = new char[columnCount];
 
-		return currentRow < maximumRows;
+		boolean more = currentRow < maximumRows;
+
+		if (!more) {
+			resetSolver();
+		}
+
+		return more;
 	}
 
 	public WordleResponse[][] getWordleGrid() {

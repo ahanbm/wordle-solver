@@ -30,7 +30,7 @@ public class KeyboardButtonAction extends AbstractAction {
 		String text = button.getActionCommand();
 		switch (text) {
 			case "Enter":
-				if (model.getCurrentColumn() >= (model.getColumnCount() - 1)) {
+				if (model.getCurrentColumn() == (model.getColumnCount())) {
 					boolean moreRows = model.setCurrentRow();
 					WordleResponse[] currentRow = model.getCurrentRow();
 					int greenCount = 0;
@@ -57,13 +57,25 @@ public class KeyboardButtonAction extends AbstractAction {
 						model.getStatistics()
 								.setCurrentStreak(++currentStreak);
 						new StatisticsDialog(view, model);
+						model.resetSolver();
 					} else if (!moreRows) {
 						System.out.println("The word was " + model.cheat());
 						view.repaintWordleGridPanel();
 						model.getStatistics().incrementTotalGamesPlayed();
 						model.getStatistics().setCurrentStreak(0);
 						new StatisticsDialog(view, model);
+						model.resetSolver();
 					} else {
+						for (String s : model.validWords()) {
+							System.out.println(s);
+						}
+
+						System.out.println("Printing Complete");
+
+						for (int i = 0; i < 5; ++i) {
+							System.out.println();
+						}
+
 						view.repaintWordleGridPanel();
 					}
 				}
@@ -73,8 +85,11 @@ public class KeyboardButtonAction extends AbstractAction {
 				view.repaintWordleGridPanel();
 				break;
 			default:
-				model.setCurrentColumn(text.charAt(0));
-				view.repaintWordleGridPanel();
+				if (model.getCurrentColumn() != (model.getColumnCount())) {
+					model.setCurrentColumn(text.charAt(0));
+					view.repaintWordleGridPanel();
+				}
+
 				break;
 		}
 

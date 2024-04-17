@@ -16,23 +16,21 @@ public class Statistics {
 
 	private List<Integer> wordsGuessed;
 
-	private String path, log;
+	private String log;
 
 	public Statistics() {
 		this.wordsGuessed = new ArrayList<>();
-		String fileSeparator = System.getProperty("file.separator");
-		this.path = System.getProperty("user.home") + fileSeparator + "Wordle";
-		this.log = fileSeparator + "statistics.log";
+		this.log = "statistics.log";
 		readStatistics();
 	}
 
 	private void readStatistics() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path + log));
-			this.currentStreak = Integer.valueOf(br.readLine().trim());
-			this.longestStreak = Integer.valueOf(br.readLine().trim());
-			this.totalGamesPlayed = Integer.valueOf(br.readLine().trim());
-			int totalWordsGuessed = Integer.valueOf(br.readLine().trim());
+			BufferedReader br = new BufferedReader(new FileReader(log));
+			this.currentStreak = Integer.parseInt(br.readLine().trim());
+			this.longestStreak = Integer.parseInt(br.readLine().trim());
+			this.totalGamesPlayed = Integer.parseInt(br.readLine().trim());
+			int totalWordsGuessed = Integer.parseInt(br.readLine().trim());
 
 			for (int index = 0; index < totalWordsGuessed; index++) {
 				wordsGuessed.add(Integer.valueOf(br.readLine().trim()));
@@ -49,10 +47,7 @@ public class Statistics {
 
 	public void writeStatistics() {
 		try {
-			File file = new File(path);
-			file.mkdir();
-			file = new File(path + log);
-			file.createNewFile();
+			File file = new File(log);
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			bw.write(Integer.toString(currentStreak));
