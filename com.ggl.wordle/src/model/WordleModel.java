@@ -63,6 +63,16 @@ public class WordleModel {
 		return s.toString();
 	}
 
+	public String cheat() {
+		StringBuilder word = new StringBuilder();
+
+		for (char c : currentWord) {
+			word.append(c);
+		}
+
+		return word.toString();
+	}
+
 	public void initialize() {
 		this.wordleGrid = initializeWordleGrid();
 		this.currentColumn = 0;

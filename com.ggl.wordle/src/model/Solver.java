@@ -12,7 +12,7 @@ public class Solver {
     private boolean[][] possible;
     private int[] yellows;
 
-    private List<Integer> greenIndexes;
+    private Map<Integer, Character> greenIndexes;
     private Map<Character, Integer> numChars;
 
     private Map<String, Double> wordMap;
@@ -22,7 +22,7 @@ public class Solver {
         reset(letters);
     }
 
-    public Solver(boolean[][] possible, int[] yellows, List<Integer> greenIndexes, Map<Character,
+    public Solver(boolean[][] possible, int[] yellows, Map<Integer, Character> greenIndexes, Map<Character,
             Integer> numChars, Map<String, Double> wordMap) {
         this.possible = possible;
         this.yellows = yellows;
@@ -38,7 +38,7 @@ public class Solver {
     public void reset(int letters) {
         possible = new boolean[letters][26];
         yellows = new int[26];
-        greenIndexes = new ArrayList<>();
+        greenIndexes = new HashMap<>();
         numChars = new HashMap<>();
 
         for (int i = 0; i < letters; ++i) {
@@ -51,8 +51,8 @@ public class Solver {
     private int numRepeats(char c) {
         int total = yellows[(int)c - 65];
 
-        for (Integer green : greenIndexes) {
-            if (green == ((int) c - 65)) {
+        for (char ch : greenIndexes.values()) {
+            if (ch == c) {
                 ++total;
             }
         }
@@ -81,7 +81,7 @@ public class Solver {
                     }
                 }
 
-                greenIndexes.add(i);
+                greenIndexes.put(i, guess[i]);
             }
         }
 
@@ -101,7 +101,7 @@ public class Solver {
                     possible[i][(int) guess[i] - 65] = false;
                 } else {
                     for (int j = 0; j < possible.length; ++j) {
-                        if (!greenIndexes.contains(j)) {
+                        if (!greenIndexes.containsKey(j)) {
                             possible[j][(int) guess[i] - 65] = false;
                         }
                     }
@@ -238,7 +238,7 @@ public class Solver {
 
         for (String answer : words) {
             Solver sol = new Solver(deepCopy(possible), yellows.clone(),
-                    new ArrayList<>(greenIndexes), new HashMap<>(numChars), new HashMap<>(wordMap));
+                    new HashMap<>(greenIndexes), new HashMap<>(numChars), new HashMap<>(wordMap));
 
             char[] wordC = word.toUpperCase().toCharArray();
             char[] answerC = answer.toUpperCase().toCharArray();

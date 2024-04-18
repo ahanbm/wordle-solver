@@ -90,7 +90,7 @@ public class KeyboardButtonAction extends AbstractAction {
 						new StatisticsDialog(view, model);
 						model.resetSolver();
 					} else if (!moreRows) {
-						System.out.println("You lost!");
+						System.out.println("You lost! The correct word was: " + model.cheat());
 						view.repaintWordleGridPanel();
 						model.getStatistics().incrementTotalGamesPlayed();
 						model.getStatistics().setCurrentStreak(0);
