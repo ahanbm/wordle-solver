@@ -82,6 +82,10 @@ public class Solver {
                 }
 
                 greenIndexes.put(i, guess[i]);
+
+                if (yellows[(int)(guess[i]) - 65] > 0) {
+                    --yellows[(int)(guess[i]) - 65];
+                }
             }
         }
 
@@ -91,6 +95,12 @@ public class Solver {
             if (response[i].equals(AppColors.YELLOW)) {
                 possible[i][(int)guess[i] - 65] = false;
                 ++newYellows[(int)guess[i] - 65];
+            }
+        }
+
+        for (int i = 0; i < 26; ++i) {
+            if (newYellows[i] > yellows[i]) {
+                yellows[i] = newYellows[i];
             }
         }
 
@@ -106,12 +116,6 @@ public class Solver {
                         }
                     }
                 }
-            }
-        }
-
-        for (int i = 0; i < 26; ++i) {
-            if (newYellows[i] > yellows[i]) {
-                yellows[i] = newYellows[i];
             }
         }
     }
