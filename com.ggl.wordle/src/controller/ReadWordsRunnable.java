@@ -55,7 +55,7 @@ public class ReadWordsRunnable implements Runnable {
 
 		List<String> wordlist = new ArrayList<>();
 
-		String text = "resources/usa.txt";
+		String text = "resources/words.txt";
 		File f = new File(text);
 
 		if (f.exists()) {

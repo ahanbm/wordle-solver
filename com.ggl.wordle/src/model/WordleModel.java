@@ -45,7 +45,7 @@ public class WordleModel {
 		new Thread(runnable).start();
 	}
 
-	public String cheat() {
+	public String guessAsString() {
 		StringBuilder s = new StringBuilder();
 
 		for (char c : currentWord) {
@@ -53,6 +53,10 @@ public class WordleModel {
 		}
 
 		return s.toString();
+	}
+
+	public String cheat() {
+		return guessAsString();
 	}
 
 	public void initialize() {
@@ -168,6 +172,10 @@ public class WordleModel {
 
 	public void resetSolver() {
 		sol.reset(columnCount);
+	}
+
+	public boolean guessIsWord() {
+		return wordList.contains(guessAsString());
 	}
 
 	public boolean setCurrentRow() {

@@ -31,6 +31,11 @@ public class KeyboardButtonAction extends AbstractAction {
 		switch (text) {
 			case "Enter":
 				if (model.getCurrentColumn() == (model.getColumnCount())) {
+					if (!model.guessIsWord()) {
+						System.out.println(model.guessAsString());
+						break;
+					}
+
 					boolean moreRows = model.setCurrentRow();
 					WordleResponse[] currentRow = model.getCurrentRow();
 					int greenCount = 0;
