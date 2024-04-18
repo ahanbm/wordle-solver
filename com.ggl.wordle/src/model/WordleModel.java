@@ -1,5 +1,7 @@
 package com.ggl.wordle.model;
 
+import static java.lang.Double.NaN;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class WordleModel {
 	private final Statistics statistics;
 
 	private WordleResponse[][] wordleGrid;
+	private final boolean playMode;
 
 	public WordleModel() {
 		this.currentColumn = 0;
@@ -42,6 +45,7 @@ public class WordleModel {
 		this.wordleGrid = initializeWordleGrid();
 		this.guess = new char[columnCount];
 		this.statistics = new Statistics();
+		playMode = true;
 	}
 
 	private void createWordList() {
@@ -149,12 +153,18 @@ public class WordleModel {
 	}
 
 	public Map<String, Double> validWords() {
+		//Map<String, Double> result =
+		//		new TreeMap<>(((o1, o2) -> Double.compare(sol.utility(o1), sol.utility(o2))));
 		Map<String, Double> result =
-				new TreeMap<>(((o1, o2) -> Double.compare(sol.utility(o1), sol.utility(o2))));
+				new TreeMap<>(((o1, o2) -> Double.compare(sol.simpleUtility(o1), sol.simpleUtility(o2))));
 
 		for (String word : wordList) {
 			if (sol.works(word)) {
-				result.put(word, sol.utility(word));
+				//if (Double.isNaN(sol.utility(word))) {
+				//	continue;
+				//}
+				//result.put(word, sol.utility(word));
+				result.put(word, sol.simpleUtility(word));
 			}
 		}
 
@@ -197,8 +207,25 @@ public class WordleModel {
 		return wordList.contains(s) || guessList.contains(s);
 	}
 
-	public boolean setCurrentRow() {
-		Color[] toSet = response(guess, currentWord);
+	public boolean setCurrentRow(char[] chars) {
+		Color[] toSet;
+
+		if (playMode) {
+			toSet = response(guess, currentWord);
+		} else {
+			toSet = new Color[chars.length];
+
+			for (int i = 0; i < toSet.length; ++i) {
+				if (chars[i] == 'g') {
+					toSet[i] = AppColors.GREEN;
+				} else if (chars[i] == 'y') {
+					toSet[i] = AppColors.YELLOW;
+				} else {
+					toSet[i] = AppColors.GRAY;
+				}
+			}
+		}
+
 		sol.log(guess, toSet);
 
 		Color foregroundColor = Color.WHITE;

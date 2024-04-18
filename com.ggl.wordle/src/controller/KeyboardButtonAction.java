@@ -1,8 +1,12 @@
 package com.ggl.wordle.controller;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 import java.util.Map;
+import java.io.File;
 
+import java.util.Scanner;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
@@ -25,6 +29,26 @@ public class KeyboardButtonAction extends AbstractAction {
 		this.model = model;
 	}
 
+	private char[] responseInput() {
+		StringBuilder content = new StringBuilder();
+		File file = new File("resources/response.txt");
+
+		Scanner scanner;
+
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException f) {
+			return null;
+		}
+
+		while (scanner.hasNextLine()) {
+			content.append(scanner.nextLine());
+		}
+
+		scanner.close();
+		return content.toString().toCharArray();
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		JButton button = (JButton) event.getSource();
@@ -36,7 +60,9 @@ public class KeyboardButtonAction extends AbstractAction {
 						break;
 					}
 
-					boolean moreRows = model.setCurrentRow();
+					char[] toSet = responseInput();
+					boolean moreRows = model.setCurrentRow(toSet);
+
 					WordleResponse[] currentRow = model.getCurrentRow();
 					int greenCount = 0;
 					for (WordleResponse wordleResponse : currentRow) {

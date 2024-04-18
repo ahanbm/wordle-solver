@@ -214,7 +214,56 @@ public class Solver {
         return result;
     }
 
-    public double utility(String word) {
+    public static boolean[][] deepCopy(boolean[][] original) {
+        int rows = original.length;
+        int columns = original[0].length;
+        boolean[][] copy = new boolean[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(original[i], 0, copy[i], 0, columns);
+        }
+
+        return copy;
+    }
+
+    public double simpleUtility(String word) {
         return wordMap.get(word);
+    }
+
+    public double utility(String word) {
+        double totalProp = 0;
+        List<String> words = validWords();
+
+        double totalWeight = 0;
+
+        for (String answer : words) {
+            Solver sol = new Solver(deepCopy(possible), yellows.clone(),
+                    new ArrayList<>(greenIndexes), new HashMap<>(numChars), new HashMap<>(wordMap));
+
+            char[] wordC = word.toUpperCase().toCharArray();
+            char[] answerC = answer.toUpperCase().toCharArray();
+
+            sol.log(wordC, response(wordC, answerC));
+
+            double total = 0;
+            double max = 0;
+
+            for (String possible: sol.validWords()) {
+                double prob = wordMap.get(possible);
+
+                total += prob;
+                max = Math.max(max, prob);
+            }
+
+            double prop = max / total;
+            totalProp += prop;
+
+            totalWeight += wordMap.get(answer);
+        }
+
+        double averageProp = totalProp / words.size();
+        double currentProp = wordMap.get(word) / totalWeight;
+
+        return currentProp * averageProp;
     }
 }
