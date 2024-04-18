@@ -31,8 +31,7 @@ public class KeyboardButtonAction extends AbstractAction {
 		switch (text) {
 			case "Enter":
 				if (model.getCurrentColumn() == (model.getColumnCount())) {
-					if (!model.guessIsWord()) {
-						System.out.println(model.guessAsString());
+					if (!model.guessIsValid()) {
 						break;
 					}
 
@@ -41,7 +40,7 @@ public class KeyboardButtonAction extends AbstractAction {
 					int greenCount = 0;
 					for (WordleResponse wordleResponse : currentRow) {
 						view.setColor(Character.toString(
-										wordleResponse.getChar()),
+								wordleResponse.getChar()),
 								wordleResponse.getBackgroundColor(),
 								wordleResponse.getForegroundColor());
 						if (wordleResponse.getBackgroundColor()
@@ -64,7 +63,7 @@ public class KeyboardButtonAction extends AbstractAction {
 						new StatisticsDialog(view, model);
 						model.resetSolver();
 					} else if (!moreRows) {
-						System.out.println("The word was " + model.cheat());
+						System.out.println("You lost!");
 						view.repaintWordleGridPanel();
 						model.getStatistics().incrementTotalGamesPlayed();
 						model.getStatistics().setCurrentStreak(0);

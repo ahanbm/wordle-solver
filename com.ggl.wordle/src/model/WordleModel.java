@@ -1,11 +1,12 @@
 package com.ggl.wordle.model;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.ggl.wordle.controller.ReadWordsRunnable;
 
@@ -17,7 +18,10 @@ public class WordleModel {
 	private final int columnCount, maximumRows;
 	private int currentColumn, currentRow;
 
+	private Map<String, Double> wordMap;
+
 	private List<String> wordList;
+	private List<String> guessList;
 
 	private final Random random;
 
@@ -45,40 +49,49 @@ public class WordleModel {
 		new Thread(runnable).start();
 	}
 
-	public String guessAsString() {
+	private String guessAsString() {
 		StringBuilder s = new StringBuilder();
 
-		for (char c : currentWord) {
+		for (char c : guess) {
 			s.append(c);
 		}
 
 		return s.toString();
 	}
 
-	public String cheat() {
-		return guessAsString();
-	}
-
 	public void initialize() {
 		this.wordleGrid = initializeWordleGrid();
 		this.currentColumn = 0;
 		this.currentRow = 0;
-		generateCurrentWord();
+		generateWord();
 		this.guess = new char[columnCount];
 	}
 
-	public void generateCurrentWord() {
-		String word = getCurrentWord();
+	public void generateWord() {
+		String word = getWord();
 		this.currentWord = word.toUpperCase().toCharArray();
 	}
 
-	private String getCurrentWord() {
-		return wordList.get(getRandomIndex());
-	}
+	private String getWord() {
+		double total = 0;
 
-	private int getRandomIndex() {
-		int size = wordList.size();
-		return random.nextInt(size);
+		for (double value : wordMap.values()) {
+			total += value;
+		}
+
+		int randomNumber = random.nextInt((int)total);
+
+		double current = 0;
+
+		for (Map.Entry<String, Double> entry : wordMap.entrySet()) {
+			current += entry.getValue();
+
+			if (current >= randomNumber) {
+				return entry.getKey();
+			}
+		}
+
+		return null;
 	}
 
 	private WordleResponse[][] initializeWordleGrid() {
@@ -93,13 +106,13 @@ public class WordleModel {
 		return wordleGrid;
 	}
 
-	public void setWordList(List<String> wordList) {
-		this.wordList = wordList;
+	public void setWordMap(Map<String, Double> map) {
+		this.wordMap = map;
+		this.wordList = map.keySet().stream().toList();
 	}
 
-	public void setCurrentWord() {
-		int index = getRandomIndex();
-		currentWord = wordList.get(index).toCharArray();
+	public void setGuessList(List<String> guessList) {
+		this.guessList = guessList;
 	}
 
 	public void setCurrentColumn(char c) {
@@ -146,8 +159,8 @@ public class WordleModel {
 	}
 
 	public Color[] response(char[] guess) {
-		Color[] result = new Color[currentWord.length];
-		boolean[] matchedIndices = new boolean[currentWord.length];
+		Color[] result = new Color[columnCount];
+		boolean[] matchedIndices = new boolean[columnCount];
 
 		Arrays.fill(result, AppColors.GRAY);
 
@@ -174,8 +187,11 @@ public class WordleModel {
 		sol.reset(columnCount);
 	}
 
-	public boolean guessIsWord() {
-		return wordList.contains(guessAsString());
+	public boolean guessIsValid() {
+		String s = guessAsString();
+		s = s.toLowerCase();
+
+		return wordList.contains(s) || guessList.contains(s);
 	}
 
 	public boolean setCurrentRow() {

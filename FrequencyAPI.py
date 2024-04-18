@@ -34,7 +34,7 @@ def file_read(name):
     return lines
 
 def file_write(terms):
-    with open("frequency.txt", "w") as file:
+    with open("resources/frequency.txt", "w") as file:
         for term in terms:
             (word, frequency) = term
             file.write(word + " " + str(frequency) + "\n")

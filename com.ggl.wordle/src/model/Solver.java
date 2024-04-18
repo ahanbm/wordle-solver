@@ -32,8 +32,8 @@ public class Solver {
     private int numRepeats(char c) {
         int total = yellows[(int)c - 65];
 
-        for (int index : greenIndexes) {
-            if (greenIndexes.get(index) == c) {
+        for (Integer green : greenIndexes) {
+            if (green == ((int) c - 65)) {
                 ++total;
             }
         }

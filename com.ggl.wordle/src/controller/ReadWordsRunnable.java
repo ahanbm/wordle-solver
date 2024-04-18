@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,27 +37,59 @@ public class ReadWordsRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		List<String> wordlist;
+		Map<String, Double> wordMap;
+		List<String> guessList;
 
 		try {
-			wordlist = createWordList();
-			LOGGER.info("Created word list of " + wordlist.size() + " words.");
+			wordMap = createWordList("resources/frequency.txt");
+			guessList = createGuessList("resources/guesses.txt");
+
+			LOGGER.info("Created word list of " + wordMap.size() + " words.");
 		} catch (IOException e) {
 			LOGGER.info(e.getMessage());
 			e.printStackTrace();
-			wordlist = new ArrayList<>();
+			wordMap = new HashMap<>();
+			guessList = new ArrayList<>();
 		}
 
-		model.setWordList(wordlist);
-		model.generateCurrentWord();
+		model.setWordMap(wordMap);
+		model.setGuessList(guessList);
+
+		model.generateWord();
 	}
 
-	private List<String> createWordList() throws IOException {
+	private Map<String, Double> createWordList(String text) throws IOException {
+		int length = model.getColumnCount();
+
+		Map<String, Double> result = new HashMap<>();
+		File f = new File(text);
+
+		if (f.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+				String line = reader.readLine();
+				while (line != null) {
+					String[] parts = line.split("\\s+");
+					String str = parts[0];
+					double num = Double.parseDouble(parts[1]);
+
+					if (str.length() == length) {
+						result.put(str, num);
+					}
+
+					line = reader.readLine();
+				}
+			}
+		} else {
+			throw new IOException("Resource not found: " + text);
+		}
+
+		return result;
+	}
+
+	private List<String> createGuessList(String text) throws IOException {
 		int minimum = model.getColumnCount();
 
 		List<String> wordlist = new ArrayList<>();
-
-		String text = "resources/words.txt";
 		File f = new File(text);
 
 		if (f.exists()) {
@@ -75,5 +109,4 @@ public class ReadWordsRunnable implements Runnable {
 
 		return wordlist;
 	}
-
 }
