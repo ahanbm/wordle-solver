@@ -1,6 +1,7 @@
 package com.ggl.wordle.controller;
 
 import java.awt.event.ActionEvent;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -70,8 +71,11 @@ public class KeyboardButtonAction extends AbstractAction {
 						new StatisticsDialog(view, model);
 						model.resetSolver();
 					} else {
-						for (String s : model.validWords()) {
-							System.out.println(s);
+						for (Map.Entry<String, Double> entry : model.validWords().entrySet()) {
+							String key = entry.getKey();
+							Double value = entry.getValue();
+
+							System.out.println(key + " " + value);
 						}
 
 						System.out.println("Printing Complete");

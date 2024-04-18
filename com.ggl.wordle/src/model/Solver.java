@@ -2,18 +2,37 @@ package com.ggl.wordle.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Solver {
     private boolean[][] possible;
     private int[] yellows;
+
     private List<Integer> greenIndexes;
     private Map<Character, Integer> numChars;
 
+    private Map<String, Double> wordMap;
+
     public Solver(int letters) {
+        wordMap = new HashMap<>();
         reset(letters);
+    }
+
+    public Solver(boolean[][] possible, int[] yellows, List<Integer> greenIndexes, Map<Character,
+            Integer> numChars, Map<String, Double> wordMap) {
+        this.possible = possible;
+        this.yellows = yellows;
+        this.greenIndexes = greenIndexes;
+        this.numChars = numChars;
+        this.wordMap = wordMap;
+    }
+
+    public void setWordMap(Map<String, Double> wordMap) {
+        this.wordMap = wordMap;
     }
 
     public void reset(int letters) {
@@ -147,5 +166,55 @@ public class Solver {
         }
 
         return true;
+    }
+
+    public List<String> validWords() {
+        List<String> result = new ArrayList<>();
+
+        for (String word : wordMap.keySet()) {
+            if (works(word)) {
+                result.add(word);
+            }
+        }
+
+        return result;
+    }
+
+    private int indexOfFirstMatch(char[] word, char letter, boolean[] matchedIndices) {
+        for (int i = 0; i < word.length; i++) {
+            if (word[i] == letter && !matchedIndices[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public Color[] response(char[] guess, char[] answer) {
+        Color[] result = new Color[possible.length];
+        boolean[] matchedIndices = new boolean[possible.length];
+
+        Arrays.fill(result, AppColors.GRAY);
+
+        for (int column = 0; column < guess.length; column++) {
+            if (guess[column] == answer[column]) {
+                result[column] = AppColors.GREEN;
+                matchedIndices[column] = true;
+            }
+        }
+
+        for (int column = 0; column < guess.length; column++) {
+            int index = indexOfFirstMatch(answer, guess[column], matchedIndices);
+
+            if (index != -1 && result[column] != AppColors.GREEN) {
+                result[column] = AppColors.YELLOW;
+                matchedIndices[index] = true;
+            }
+        }
+
+        return result;
+    }
+
+    public double utility(String word) {
+        return wordMap.get(word);
     }
 }

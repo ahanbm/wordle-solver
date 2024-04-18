@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import com.ggl.wordle.controller.ReadWordsRunnable;
 
@@ -109,6 +109,8 @@ public class WordleModel {
 	public void setWordMap(Map<String, Double> map) {
 		this.wordMap = map;
 		this.wordList = map.keySet().stream().toList();
+
+		sol.setWordMap(map);
 	}
 
 	public void setGuessList(List<String> guessList) {
@@ -146,33 +148,34 @@ public class WordleModel {
 		return -1;
 	}
 
-	public List<String> validWords() {
-		ArrayList<String> result = new ArrayList<>();
+	public Map<String, Double> validWords() {
+		Map<String, Double> result =
+				new TreeMap<>(((o1, o2) -> Double.compare(sol.utility(o1), sol.utility(o2))));
 
 		for (String word : wordList) {
 			if (sol.works(word)) {
-				result.add(word);
+				result.put(word, sol.utility(word));
 			}
 		}
 
 		return result;
 	}
 
-	public Color[] response(char[] guess) {
+	public Color[] response(char[] guess, char[] answer) {
 		Color[] result = new Color[columnCount];
 		boolean[] matchedIndices = new boolean[columnCount];
 
 		Arrays.fill(result, AppColors.GRAY);
 
 		for (int column = 0; column < guess.length; column++) {
-			if (guess[column] == currentWord[column]) {
+			if (guess[column] == answer[column]) {
 				result[column] = AppColors.GREEN;
 				matchedIndices[column] = true;
 			}
 		}
 
 		for (int column = 0; column < guess.length; column++) {
-			int index = indexOfFirstMatch(currentWord, guess[column], matchedIndices);
+			int index = indexOfFirstMatch(answer, guess[column], matchedIndices);
 
 			if (index != -1 && result[column] != AppColors.GREEN) {
 				result[column] = AppColors.YELLOW;
@@ -195,7 +198,7 @@ public class WordleModel {
 	}
 
 	public boolean setCurrentRow() {
-		Color[] toSet = response(guess);
+		Color[] toSet = response(guess, currentWord);
 		sol.log(guess, toSet);
 
 		Color foregroundColor = Color.WHITE;
