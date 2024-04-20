@@ -54,12 +54,6 @@ public class WordleModel {
 		this.wordleGrid = initializeWordleGrid();
 		this.guess = new char[columnCount];
 		this.statistics = new Statistics();
-
-		if (playMode) {
-			currentResponseColumn = columnCount;
-		} else {
-			currentResponseColumn = 0;
-		}
 	}
 
 	private void readConfig(String text) throws IOException {

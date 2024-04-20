@@ -112,7 +112,7 @@ public class WordleGridPanel extends JPanel {
 	/**
 	 * Draw a String centered in the middle of a Rectangle.
 	 *
-	 * @param g    The Graphics instance.
+	 * @param g2d    The Graphics instance.
 	 * @param text The String to draw.
 	 * @param rect The Rectangle to center the text in.
 	 */

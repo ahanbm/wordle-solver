@@ -53399,7 +53399,6 @@ timesharing 0.101751
 timetable 1.386347
 timetables 0.422439
 timeworn 0.052487
-timex 955.185521
 timid 2.561229
 timidity 0.858023
 timidly 0.753791
