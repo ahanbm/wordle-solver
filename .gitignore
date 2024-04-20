@@ -1,0 +1,7 @@
+.idea/
+logging.txt
+out/
+wordle.iml
+.DS_Store
+test.txt
+statistics.log
