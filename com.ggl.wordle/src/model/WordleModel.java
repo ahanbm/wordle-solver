@@ -3,6 +3,10 @@ package com.ggl.wordle.model;
 import static java.lang.Double.NaN;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +21,7 @@ public class WordleModel {
 	private char[] currentWord, guess;
 	private final Solver sol;
 
-	private final int columnCount, maximumRows;
+	private int columnCount, maximumRows;
 	private int currentColumn, currentRow;
 
 	private Map<String, Double> wordMap;
@@ -26,31 +30,65 @@ public class WordleModel {
 	private List<String> guessList;
 
 	private final Random random;
-
 	private final Statistics statistics;
 
 	private WordleResponse[][] wordleGrid;
-	private final boolean playMode;
+	private boolean playMode;
 
 	public WordleModel() {
 		this.currentColumn = 0;
 		this.currentRow = 0;
-		this.columnCount = 5;
-		this.maximumRows = 6;
+
+		try {
+			readConfig("config.txt");
+		} catch (IOException ie) {
+			System.err.println("config.txt not found.");
+			System.exit(1);
+		}
+
 		this.random = new Random();
 
-		createWordList();
 		sol = new Solver(columnCount);
+		createWordList();
 
 		this.wordleGrid = initializeWordleGrid();
 		this.guess = new char[columnCount];
 		this.statistics = new Statistics();
-		playMode = true;
+
+		if (playMode) {
+			currentResponseColumn = columnCount;
+		} else {
+			currentResponseColumn = 0;
+		}
+	}
+
+	private void readConfig(String text) throws IOException {
+		File f = new File(text);
+
+		if (f.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+				String line = reader.readLine();
+				this.columnCount = Integer.parseInt(line);
+
+				line = reader.readLine();
+				this.maximumRows = Integer.parseInt(line);
+
+				line = reader.readLine();
+
+				if (line.equals("P") || line.equals("p") || line.equals("Play") || line.equals("play")) {
+					this.playMode = true;
+				} else {
+					this.playMode = false;
+				}
+			}
+		} else {
+			throw new IOException("Resource not found: " + text);
+		}
 	}
 
 	private void createWordList() {
 		ReadWordsRunnable runnable = new ReadWordsRunnable(this);
-		new Thread(runnable).start();
+		runnable.run();
 	}
 
 	private String guessAsString() {
@@ -93,7 +131,7 @@ public class WordleModel {
 			total += value;
 		}
 
-		int randomNumber = random.nextInt((int)total);
+		int randomNumber = random.nextInt((int) total);
 
 		double current = 0;
 
@@ -163,17 +201,18 @@ public class WordleModel {
 	}
 
 	public Map<String, Double> validWords() {
-		//Map<String, Double> result =
-		//		new TreeMap<>(((o1, o2) -> Double.compare(sol.utility(o1), sol.utility(o2))));
-		Map<String, Double> result =
-				new TreeMap<>(((o1, o2) -> Double.compare(sol.simpleUtility(o1), sol.simpleUtility(o2))));
+		// Map<String, Double> result =
+		// new TreeMap<>(((o1, o2) -> Double.compare(sol.utility(o1),
+		// sol.utility(o2))));
+		Map<String, Double> result = new TreeMap<>(
+				((o1, o2) -> Double.compare(sol.simpleUtility(o1), sol.simpleUtility(o2))));
 
 		for (String word : wordList) {
 			if (sol.works(word)) {
-				//if (Double.isNaN(sol.utility(word))) {
-				//	continue;
-				//}
-				//result.put(word, sol.utility(word));
+				// if (Double.isNaN(sol.utility(word))) {
+				// continue;
+				// }
+				// result.put(word, sol.utility(word));
 				result.put(word, sol.simpleUtility(word));
 			}
 		}

@@ -16,7 +16,7 @@ import java.io.FileReader;
 
 import com.ggl.wordle.model.WordleModel;
 
-public class ReadWordsRunnable implements Runnable {
+public class ReadWordsRunnable {
 
 	private final static Logger LOGGER = Logger.getLogger(ReadWordsRunnable.class.getName());
 
@@ -35,7 +35,6 @@ public class ReadWordsRunnable implements Runnable {
 		this.model = model;
 	}
 
-	@Override
 	public void run() {
 		Map<String, Double> wordMap;
 		List<String> guessList;
